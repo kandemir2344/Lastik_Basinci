@@ -1,42 +1,102 @@
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Lastik Basınç Rehberi</title>
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#000000" />
+
   <style>
+    :root{
+      --overlay: rgba(0,0,0,.52);       /* Arka plan karartma (daha koyu için .6 yap) */
+      --accent: #00a884;                /* WhatsApp yeşili */
+      --white: #fff;
+      --muted: rgba(255,255,255,.85);
+      --radius: 14px;
+    }
+
+    html, body { height: 100%; }
     body{
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      margin:0; padding:16px; max-width:520px; margin-inline:auto;
+      font-family: system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+      margin:0; padding:18px; max-width:560px; margin-inline:auto; color: var(--white);
+
+      /* Arka plan foto + hafif üst degrade */
       background-image:
-        linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.25)),
+        linear-gradient(to bottom, rgba(0,0,0,.15), rgba(0,0,0,.15)),
         url("https://raw.githubusercontent.com/kandemir2344/Lastik_Basinci/refs/heads/main/IMG_9095.jpeg");
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
-      color:#111;
+      position: relative;
+      z-index: 0;
     }
+
+    /* Koyu overlay: yazıların okunmasını sağlar */
     body::before{
       content:""; position:fixed; inset:0; z-index:-1;
-      background: rgba(0,0,0,.35);
+      background: var(--overlay);
+      backdrop-filter: blur(1.5px);
     }
-    h1{font-size:22px;margin:8px 0 12px;color:#fff;text-shadow:1px 1px 3px rgba(0,0,0,.7);}
-    .card{background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:14px;margin:12px 0}
-    select,button{width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;font-size:16px}
-    button{background:#00a884;color:#fff;font-weight:700;border:none}
-    button:disabled{opacity:.5}
-    .hint{font-size:14px;color:#444}
-    .result{font-size:18px;font-weight:700;margin-top:8px}
-    .steps li{margin:6px 0}
-    .cta{margin-top:12px}
-    .small{font-size:12px;color:#eee;text-shadow:1px 1px 2px rgba(0,0,0,.7)}
+
+    h1{
+      font-size: 24px; margin: 6px 0 14px;
+      text-shadow: 0 2px 6px rgba(0,0,0,.65);
+    }
+
+    /* Kartları kaldırdık: sadece şeffaf gruplar */
+    .group{ margin: 14px 0; }
+
+    label{ display:block; margin:0 0 8px; font-weight:700; text-shadow:0 2px 6px rgba(0,0,0,.6) }
+
+    /* Şeffaf select */
+    select{
+      width:100%; padding:14px 12px; border-radius: var(--radius);
+      background: rgba(255,255,255,.12);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,.35);
+      font-size: 17px; outline: none;
+      backdrop-filter: blur(2px);
+    }
+    select option{ color:#000; } /* iOS açılır listede okunaklı olsun */
+
+    /* Sonuç metni */
+    .result{
+      font-size: 20px; font-weight:800; margin-top:10px;
+      text-shadow: 0 2px 6px rgba(0,0,0,.65);
+    }
+
+    .hint{ font-size: 14px; color: var(--muted); margin-top:6px; text-shadow: 0 1px 3px rgba(0,0,0,.6) }
+
+    /* Belirgin WhatsApp butonu */
+    .cta{
+      margin-top:14px; width:100%; padding:14px 16px; border-radius: var(--radius);
+      background: var(--accent); color:#fff; font-weight:800; font-size:17px; border:none;
+      box-shadow: 0 8px 24px rgba(0,168,132,.5), 0 3px 8px rgba(0,0,0,.35);
+    }
+    .cta:disabled{ opacity:.55; box-shadow:none; filter:grayscale(.2) }
+
+    /* Liste metinleri */
+    .steps{ margin:0; padding-left:20px; }
+    .steps li{ margin:8px 0; text-shadow: 0 1px 3px rgba(0,0,0,.55) }
+
+    a#video{ color:#8ecbff; font-weight:700; text-decoration: underline; }
+    a#video:hover{ opacity:.9 }
+
+    .small{
+      font-size: 12px; color: rgba(255,255,255,.8);
+      margin-top: 14px; text-shadow: 0 1px 3px rgba(0,0,0,.65)
+    }
+
+    @media (max-width:560px){
+      body{ padding:16px }
+    }
   </style>
 </head>
 <body>
+
   <h1>🚗 Lastik Basınç Rehberi</h1>
 
-  <div class="card">
+  <div class="group">
     <label for="vehicle">Araç türü / yük durumu</label>
     <select id="vehicle">
       <option value="">Seçiniz…</option>
@@ -50,10 +110,10 @@
     <div id="out" class="result"></div>
     <div class="hint">Not: Kesin değer için kapı içindeki üretici etiketine bakın.</div>
 
-    <button class="cta" id="whatsapp">WhatsApp ile yardım iste</button>
+    <button id="whatsapp" class="cta">WhatsApp ile yardım iste</button>
   </div>
 
-  <div class="card">
+  <div class="group">
     <div class="hint"><b>3 Adımda Kullanım</b></div>
     <ol class="steps">
       <li>Hortumu siboba sıkıca tak.</li>
@@ -66,6 +126,7 @@
   <div class="small">© Mehmet – Kalibrasyon ve yerinde servis için WhatsApp’tan yazın.</div>
 
 <script>
+  // Öneri tablosu
   const table = {
     otomobil:     { on: "2.2 bar (≈32 psi)", arka: "2.2 bar (≈32 psi)" },
     otomobil_yuk: { on: "2.4 bar (≈35 psi)", arka: "2.6 bar (≈38 psi)" },
@@ -79,23 +140,30 @@
   const whatsapp = document.getElementById('whatsapp');
   const video    = document.getElementById('video');
 
+  // Başlangıçta buton pasif
   whatsapp.disabled = true;
 
   vehicle.addEventListener('change', () => {
     const v = vehicle.value;
-    if(!v){ out.textContent=""; whatsapp.disabled=true; return; }
+    if(!v){
+      out.textContent = "";
+      whatsapp.disabled = true;
+      return;
+    }
     const rec = table[v];
     out.textContent = `Öneri: Ön ${rec.on} • Arka ${rec.arka}`;
     whatsapp.disabled = false;
   });
 
-  const phone = "905389422318"; // Senin numaran
+  // WhatsApp (senin numaran)
+  const phone = "905389422318";
   whatsapp.addEventListener('click', () => {
     const v = vehicle.options[vehicle.selectedIndex]?.text || "Belirtilmedi";
     const msg = encodeURIComponent(`Merhaba, lastik basıncı desteği istiyorum. Araç: ${v}`);
     window.location.href = `https://wa.me/${phone}?text=${msg}`;
   });
 
+  // Video linkini ekle (paylaşıma açık olmalı)
   video.href = "https://example.com/kisa-video";
 </script>
 </body>
