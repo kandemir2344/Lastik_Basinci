@@ -5,17 +5,32 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Lastik Basınç Rehberi</title>
   <meta name="theme-color" content="#000000">
-  <link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;Lastik Basınç Rehberi&quot;,&quot;short_name&quot;:&quot;Basınç&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#ffffff&quot;,&quot;theme_color&quot;:&quot;#000000&quot;}">
   <style>
-    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial; margin:0; padding:16px; max-width:520px; margin-inline:auto; }
-    h1 { font-size: 20px; margin: 8px 0 12px; }
-    .card { border: 1px solid #ddd; border-radius: 10px; padding: 14px; margin: 10px 0; }
-    select, button { width:100%; padding:12px; border-radius:10px; border:1px solid #ccc; font-size:16px; }
-    .hint { font-size: 14px; color:#444; }
-    .result { font-size: 18px; font-weight:600; margin-top:8px; }
-    .steps li { margin:6px 0; }
-    .cta { margin-top:12px; }
-    .small { font-size:12px; color:#666; margin-top:8px; }
+    body{
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      margin:0; padding:16px; max-width:520px; margin-inline:auto;
+      background-image:
+        linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.25)),
+        url("https://raw.githubusercontent.com/kandemir2344/Lastik_Basinci/refs/heads/main/IMG_9095.jpeg");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color:#111;
+    }
+    body::before{
+      content:""; position:fixed; inset:0; z-index:-1;
+      background: rgba(0,0,0,.35);
+    }
+    h1{font-size:22px;margin:8px 0 12px;color:#fff;text-shadow:1px 1px 3px rgba(0,0,0,.7);}
+    .card{background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:14px;margin:12px 0}
+    select,button{width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;font-size:16px}
+    button{background:#00a884;color:#fff;font-weight:700;border:none}
+    button:disabled{opacity:.5}
+    .hint{font-size:14px;color:#444}
+    .result{font-size:18px;font-weight:700;margin-top:8px}
+    .steps li{margin:6px 0}
+    .cta{margin-top:12px}
+    .small{font-size:12px;color:#eee;text-shadow:1px 1px 2px rgba(0,0,0,.7)}
   </style>
 </head>
 <body>
@@ -31,8 +46,10 @@
       <option value="ticari">Hafif ticari (boş)</option>
       <option value="ticari_yuk">Hafif ticari (yük yüklü)</option>
     </select>
+
     <div id="out" class="result"></div>
-    <div class="small">Not: Kesin değer için kapı içindeki üretici etiketine bakın.</div>
+    <div class="hint">Not: Kesin değer için kapı içindeki üretici etiketine bakın.</div>
+
     <button class="cta" id="whatsapp">WhatsApp ile yardım iste</button>
   </div>
 
@@ -49,37 +66,37 @@
   <div class="small">© Mehmet – Kalibrasyon ve yerinde servis için WhatsApp’tan yazın.</div>
 
 <script>
-  // Öneri tablosu (yaklaşık değerler – üretici etiketi esas)
   const table = {
-    otomobil:       { on: "2.2 bar (≈32 psi)", arka: "2.2 bar (≈32 psi)" },
-    otomobil_yuk:   { on: "2.4 bar (≈35 psi)", arka: "2.6 bar (≈38 psi)" },
-    suv:            { on: "2.4 bar (≈35 psi)", arka: "2.4 bar (≈35 psi)" },
-    ticari:         { on: "3.0 bar (≈44 psi)", arka: "3.0 bar (≈44 psi)" },
-    ticari_yuk:     { on: "3.2 bar (≈46 psi)", arka: "3.4 bar (≈49 psi)" }
+    otomobil:     { on: "2.2 bar (≈32 psi)", arka: "2.2 bar (≈32 psi)" },
+    otomobil_yuk: { on: "2.4 bar (≈35 psi)", arka: "2.6 bar (≈38 psi)" },
+    suv:          { on: "2.4 bar (≈35 psi)", arka: "2.4 bar (≈35 psi)" },
+    ticari:       { on: "3.0 bar (≈44 psi)", arka: "3.0 bar (≈44 psi)" },
+    ticari_yuk:   { on: "3.2 bar (≈46 psi)", arka: "3.4 bar (≈49 psi)" }
   };
 
-  const vehicle = document.getElementById('vehicle');
-  const out = document.getElementById('out');
+  const vehicle  = document.getElementById('vehicle');
+  const out      = document.getElementById('out');
   const whatsapp = document.getElementById('whatsapp');
-  const video = document.getElementById('video');
+  const video    = document.getElementById('video');
+
+  whatsapp.disabled = true;
 
   vehicle.addEventListener('change', () => {
     const v = vehicle.value;
-    if(!v){ out.textContent = ""; return; }
+    if(!v){ out.textContent=""; whatsapp.disabled=true; return; }
     const rec = table[v];
     out.textContent = `Öneri: Ön ${rec.on} • Arka ${rec.arka}`;
+    whatsapp.disabled = false;
   });
 
-  // WhatsApp deep link (numaranı gir)
-  const phone ="905389422318"; // Örn: 90532XXXXXXX
+  const phone = "905389422318"; // Senin numaran
   whatsapp.addEventListener('click', () => {
     const v = vehicle.options[vehicle.selectedIndex]?.text || "Belirtilmedi";
     const msg = encodeURIComponent(`Merhaba, lastik basıncı desteği istiyorum. Araç: ${v}`);
     window.location.href = `https://wa.me/${phone}?text=${msg}`;
   });
 
-  // Kısa video linkini buraya koy (YouTube/Drive paylaşımlı)
-  video.href = "https://example.com/kisa-video"; // değiştir
+  video.href = "https://example.com/kisa-video";
 </script>
 </body>
 </html>
