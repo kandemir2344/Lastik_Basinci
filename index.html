@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lastik Basınç Rehberi</title>
+  <meta name="theme-color" content="#000000">
+  <link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;Lastik Basınç Rehberi&quot;,&quot;short_name&quot;:&quot;Basınç&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#ffffff&quot;,&quot;theme_color&quot;:&quot;#000000&quot;}">
+  <style>
+    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial; margin:0; padding:16px; max-width:520px; margin-inline:auto; }
+    h1 { font-size: 20px; margin: 8px 0 12px; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 14px; margin: 10px 0; }
+    select, button { width:100%; padding:12px; border-radius:10px; border:1px solid #ccc; font-size:16px; }
+    .hint { font-size: 14px; color:#444; }
+    .result { font-size: 18px; font-weight:600; margin-top:8px; }
+    .steps li { margin:6px 0; }
+    .cta { margin-top:12px; }
+    .small { font-size:12px; color:#666; margin-top:8px; }
+  </style>
+</head>
+<body>
+  <h1>🚗 Lastik Basınç Rehberi</h1>
+
+  <div class="card">
+    <label for="vehicle">Araç türü / yük durumu</label>
+    <select id="vehicle">
+      <option value="">Seçiniz…</option>
+      <option value="otomobil">Otomobil (4 kişi/normal yük)</option>
+      <option value="otomobil_yuk">Otomobil (tam yük/bagaj dolu)</option>
+      <option value="suv">SUV / Crossover (normal)</option>
+      <option value="ticari">Hafif ticari (boş)</option>
+      <option value="ticari_yuk">Hafif ticari (yük yüklü)</option>
+    </select>
+    <div id="out" class="result"></div>
+    <div class="small">Not: Kesin değer için kapı içindeki üretici etiketine bakın.</div>
+    <button class="cta" id="whatsapp">WhatsApp ile yardım iste</button>
+  </div>
+
+  <div class="card">
+    <div class="hint"><b>3 Adımda Kullanım</b></div>
+    <ol class="steps">
+      <li>Hortumu siboba sıkıca tak.</li>
+      <li>Cihazdan hedef basıncı seç (ekrandan bar/psi).</li>
+      <li>Bip/ok işaretini bekle; bittiğinde hortumu çıkar.</li>
+    </ol>
+    <a id="video" href="#" target="_blank">▶ 20 sn’lik kısa anlatım videosu</a>
+  </div>
+
+  <div class="small">© Mehmet – Kalibrasyon ve yerinde servis için WhatsApp’tan yazın.</div>
+
+<script>
+  // Öneri tablosu (yaklaşık değerler – üretici etiketi esas)
+  const table = {
+    otomobil:       { on: "2.2 bar (≈32 psi)", arka: "2.2 bar (≈32 psi)" },
+    otomobil_yuk:   { on: "2.4 bar (≈35 psi)", arka: "2.6 bar (≈38 psi)" },
+    suv:            { on: "2.4 bar (≈35 psi)", arka: "2.4 bar (≈35 psi)" },
+    ticari:         { on: "3.0 bar (≈44 psi)", arka: "3.0 bar (≈44 psi)" },
+    ticari_yuk:     { on: "3.2 bar (≈46 psi)", arka: "3.4 bar (≈49 psi)" }
+  };
+
+  const vehicle = document.getElementById('vehicle');
+  const out = document.getElementById('out');
+  const whatsapp = document.getElementById('whatsapp');
+  const video = document.getElementById('video');
+
+  vehicle.addEventListener('change', () => {
+    const v = vehicle.value;
+    if(!v){ out.textContent = ""; return; }
+    const rec = table[v];
+    out.textContent = `Öneri: Ön ${rec.on} • Arka ${rec.arka}`;
+  });
+
+  // WhatsApp deep link (numaranı gir)
+  const phone ="905389422318"; // Örn: 90532XXXXXXX
+  whatsapp.addEventListener('click', () => {
+    const v = vehicle.options[vehicle.selectedIndex]?.text || "Belirtilmedi";
+    const msg = encodeURIComponent(`Merhaba, lastik basıncı desteği istiyorum. Araç: ${v}`);
+    window.location.href = `https://wa.me/${phone}?text=${msg}`;
+  });
+
+  // Kısa video linkini buraya koy (YouTube/Drive paylaşımlı)
+  video.href = "https://example.com/kisa-video"; // değiştir
+</script>
+</body>
+</html>
