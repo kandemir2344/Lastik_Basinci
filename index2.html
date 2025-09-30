@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lastik Basınç Rehberi (Butonlu)</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      margin: 0;
+      padding: 16px;
+      min-height: 100vh;
+
+      background-image: url('https://raw.githubusercontent.com/kandemir2344/Lastik_Basinci/refs/heads/main/IMG_9095.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #fff;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 0;
+    }
+
+    h1, .options, .result, .steps, .small {
+      position: relative;
+      z-index: 1;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      font-weight: 800;
+    }
+
+    /* Araç tipleri buton görünümü */
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .options button {
+      flex: 1 1 calc(50% - 10px);
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: rgba(255,255,255,0.85);
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
+      transition: all 0.2s ease;
+    }
+    .options button.active,
+    .options button:hover {
+      background: #25d366;
+      color: #fff;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+    }
+
+    .result {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .cta {
+      margin-top: 16px;
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      background: #25d366;
+      color: #fff;
+      font-weight: bold;
+      font-size: 17px;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+    }
+
+    .steps {
+      margin-top: 24px;
+      font-size: 15px;
+    }
+
+    .small {
+      font-size: 12px;
+      margin-top: 20px;
+      text-align: center;
+      color: rgba(255,255,255,0.8);
+    }
+  </style>
+</head>
+<body>
+  <h1>🚗 Lastik Basınç Rehberi</h1>
+
+  <div class="options">
+    <button data-value="otomobil">🚗 Otomobil (normal)</button>
+    <button data-value="otomobil_yuk">🚗 Otomobil (tam yük)</button>
+    <button data-value="suv">🚙 SUV</button>
+    <button data-value="ticari">🚐 Ticari (boş)</button>
+    <button data-value="ticari_yuk">🚐 Ticari (yük)</button>
+  </div>
+
+  <div id="out" class="result"></div>
+  <button id="whatsapp" class="cta" disabled>WhatsApp ile yardım iste</button>
+
+  <div class="steps">
+    <h3>3 Adımda Kullanım</h3>
+    <ol>
+      <li>Hortumu siboba sıkıca tak.</li>
+      <li>Cihazdan hedef basıncı seç (ekrandan bar/psi).</li>
+      <li>Bip/ok işaretini bekle; bittiğinde hortumu çıkar.</li>
+    </ol>
+    <a href="#" target="_blank">▶ 20 sn’lik kısa anlatım videosu</a>
+  </div>
+
+  <div class="small">© Mehmet – Kalibrasyon ve yerinde servis için WhatsApp’tan yazın.</div>
+
+  <script>
+    const table = {
+      otomobil: { on: "2.2 bar (≈32 psi)", arka: "2.2 bar (≈32 psi)" },
+      otomobil_yuk: { on: "2.4 bar (≈35 psi)", arka: "2.6 bar (≈38 psi)" },
+      suv: { on: "2.4 bar (≈35 psi)", arka: "2.4 bar (≈35 psi)" },
+      ticari: { on: "3.0 bar (≈44 psi)", arka: "3.0 bar (≈44 psi)" },
+      ticari_yuk: { on: "3.2 bar (≈46 psi)", arka: "3.4 bar (≈49 psi)" }
+    };
+
+    const buttons = document.querySelectorAll('.options button');
+    const out = document.getElementById('out');
+    const whatsapp = document.getElementById('whatsapp');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const v = btn.getAttribute('data-value');
+        const rec = table[v];
+        out.textContent = `Öneri: Ön ${rec.on} • Arka ${rec.arka}`;
+        whatsapp.disabled = false;
+
+        // WhatsApp linkini güncelle
+        const msg = encodeURIComponent(`Merhaba, lastik basıncı desteği istiyorum. Araç: ${btn.textContent}`);
+        whatsapp.onclick = () => {
+          window.location.href = `https://wa.me/905389422318?text=${msg}`;
+        };
+      });
+    });
+  </script>
+</body>
+</html>
